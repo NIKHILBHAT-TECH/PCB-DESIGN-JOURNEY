@@ -1,0 +1,136 @@
+# 555 Timer LED Blinker on a Custom PCB
+
+A 555 timer circuit in astable mode that blinks an LED at about 7 times per second. I designed the board in KiCad, etched it, soldered the components, and powered it with a 9V battery.
+
+
+---
+
+## Overview
+
+- **Circuit:** 555 timer in astable mode
+- **IC:** NA555P (DIP-8)
+- **Supply:** 9V battery
+- **Output:** LED blinking at about 7 Hz with about 52% duty cycle
+- **Board:** Single-sided PCB with through-hole components
+- **Design tool:** KiCad
+
+---
+
+## How It Works
+
+In astable mode the 555 has no stable state. Its output (pin 3) keeps switching between HIGH and LOW without any external trigger.
+
+1. The capacitor C2 charges through R1 and R2.
+2. When its voltage reaches 2/3 of the supply, the output goes LOW and C2 starts discharging through R2.
+3. When its voltage drops to 1/3 of the supply, the output goes HIGH and the cycle repeats.
+4. The output drives the LED through the resistor R3, which limits the current.
+5. C1 (0.01 µF) on pin 5 filters noise and keeps the thresholds stable.
+
+---
+
+## Calculations
+
+Values used: R1 = 1 kΩ, R2 = 10 kΩ, C2 = 10 µF
+
+- Frequency = 1.44 / ((R1 + 2 x R2) x C2) = 1.44 / (21k x 10µF) = about 6.9 Hz
+- HIGH time = 0.693 x (R1 + R2) x C2 = about 76 ms
+- LOW time = 0.693 x R2 x C2 = about 69 ms
+- Duty cycle = (R1 + R2) / (R1 + 2 x R2) = about 52%
+- LED current = (about 7.5V - about 2V) / 1k = about 5 mA
+
+---
+
+## Components
+
+| Ref | Component | Value |
+|---|---|---|
+| U1 | 555 timer IC (NA555P) | DIP-8 |
+| R1 | Resistor | 1 kΩ |
+| R2 | Resistor | 10 kΩ |
+| R3 | Resistor | 1 kΩ |
+| C1 | Ceramic capacitor | 0.01 µF |
+| C2 | Electrolytic capacitor | 10 µF |
+| D1 | LED | 5 mm |
+| J1 | 2-pin power connector | 2.54 mm |
+| n/a | 9V battery with clip | 9V |
+
+---
+
+## PCB Design
+
+- Designed in KiCad PCB Editor
+- Single-sided layout with all routing on the bottom copper layer
+- Wide 1.2 mm traces so the board is easy to etch by hand
+- Ground connections routed around the edge of the board
+- Design rule check completed with no unrouted nets
+
+>>> UPLOAD KICAD LAYOUT SCREENSHOT HERE <<<
+
+---
+
+## Build Process
+
+1. Designed and routed the circuit in KiCad.
+2. Printed the copper layout.
+3. Transferred the pattern onto a copper-clad board.
+4. Etched away the extra copper.
+5. Drilled the holes for the components.
+6. Soldered the components onto the board.
+7. Tested the circuit with a 9V battery.
+
+>>> UPLOAD PHOTO OF THE ETCHED BOARD HERE <<<
+
+>>> UPLOAD PHOTO OF THE SOLDERED BOARD HERE <<<
+
+---
+
+## What I Learned
+
+**Circuit concepts**
+- How the 555's two comparators create continuous oscillation
+- How the 1/3 and 2/3 supply thresholds set the timing
+- How the resistor and capacitor values decide the frequency and duty cycle
+- Why the control pin needs a capacitor and the reset pin must be tied high
+- Why an LED always needs a series resistor
+
+**PCB design**
+- Taking a circuit from schematic to placement, routing, and design rule check
+- Choosing footprints that match the real components
+- How trace width and spacing affect how easy a board is to etch
+- Why single-sided boards need careful component placement
+
+**Fabrication and assembly**
+- How a digital layout becomes a real copper board through transfer and etching
+- Soldering clean joints and avoiding bridges between closely spaced pins
+- Why component orientation matters for the LED, electrolytic capacitor, and IC
+
+**Testing**
+- Checking continuity with a multimeter before powering the board
+- Comparing the measured blink rate with the calculated value
+- Debugging step by step: power, then IC pins, then timing network, then output
+
+---
+
+## Troubleshooting
+
+- **LED does not light:** LED reversed, cold solder joint, or battery connected the wrong way round
+- **LED stays on or off:** reset pin not tied high, or a broken trace
+- **Wrong blink speed:** check R2 and C2 values, since electrolytic capacitors vary a lot
+- **Erratic behaviour:** poorly connected C1, or a solder bridge between IC pins
+
+---
+
+## Files in This Repository
+
+- `555_TIMER.kicad_pcb` - KiCad PCB layout
+- `555_TIMER.csv` - bill of materials
+- `print.pdf` - printable layout
+
+---
+
+## Possible Improvements
+
+- Replace R2 with a potentiometer for an adjustable blink rate
+- Use a double-sided board with a ground plane
+- Add a reverse-polarity protection diode on the supply input
+- Use a film capacitor instead of an electrolytic one for steadier timing
